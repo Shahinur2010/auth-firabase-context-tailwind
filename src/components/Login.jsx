@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../providers/AuthProviders';
 
 const Login = () => {
-const {signIn}= useContext(AuthContext);
+    const { signIn, signInWithGoogle } = useContext(AuthContext);
 
     const handleLogin = e => {
         e.preventDefault();
@@ -13,12 +13,23 @@ const {signIn}= useContext(AuthContext);
         console.log(email, password);
 
         signIn(email, password)
-        .then(result => {
-            const signedInUser = result.user;
-            console.log(signedInUser);
-            form.reset();
+            .then(result => {
+                const signedInUser = result.user;
+                console.log(signedInUser);
+                form.reset();
+            })
+            .catch(error => {
+                console.log(error.message)
+            })
+    }
+
+    const handleGoogleSignIn = () => {
+        signInWithGoogle()
+        .then(result=> {
+            const loggedUser = result.user;
+            console.log(loggedUser)
         })
-        .catch(error => {
+        .catch(error=>{
             console.log(error.message)
         })
     }
@@ -43,14 +54,16 @@ const {signIn}= useContext(AuthContext);
                             </label>
                             <input type="password" name='password' placeholder="password" className="input input-bordered" required />
                             <label className="label">
-                            <Link to="/register" className="label-text-alt link link-hover">Forgot password?</Link>
-                        </label>
+                                <Link to="/register" className="label-text-alt link link-hover">Forgot password?</Link>
+                            </label>
                         </div>
                         <div className="form-control mt-6">
                             <button className="btn btn-primary">Login</button>
                         </div>
                     </form>
-                   <p className='mb-4 ml-2'> <Link to='/register' className='label-text-alt link link-hover'><button className="btn btn-link">New to Auth Master? Please Register!</button></Link></p>
+                    <p className='mb-4 ml-2'> <Link to='/register' className='label-text-alt link link-hover'><button className="btn btn-link">New to Auth Master? Please Register!</button></Link></p>
+                    <div><button onClick={handleGoogleSignIn} className="btn btn-primary">Google</button>
+                    </div>
                 </div>
             </div>
         </div>
